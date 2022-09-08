@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECAP-Client", "ECAP-Client\ECAP-Client.csproj", "{A171B1D7-8B73-4069-9B1F-3832424AEB82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECAP-Server", "ECAP-Server\ECAP-Server.csproj", "{CBAE0F03-014D-4A99-8894-2A6EF1537B33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A171B1D7-8B73-4069-9B1F-3832424AEB82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A171B1D7-8B73-4069-9B1F-3832424AEB82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A171B1D7-8B73-4069-9B1F-3832424AEB82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A171B1D7-8B73-4069-9B1F-3832424AEB82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBAE0F03-014D-4A99-8894-2A6EF1537B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBAE0F03-014D-4A99-8894-2A6EF1537B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBAE0F03-014D-4A99-8894-2A6EF1537B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBAE0F03-014D-4A99-8894-2A6EF1537B33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
