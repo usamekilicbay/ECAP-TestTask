@@ -8,13 +8,28 @@ internal class ClientManager
     public ClientManager()
     {
         // Start the connection by using the server Url, I could use Env variables to do it more flexible.
-        var hubConnection = new HubConnectionBuilder().WithUrl("http://host.docker.internal:8080/listenkeyboard").Build();
+        try
+        {
+            //This line is for both server and client running in containers
+            _hubConnection = new HubConnectionBuilder().WithUrl("http://host.docker.internal:9898/listenkeyboard").Build();
 
-        // Start the connection
-        hubConnection.StartAsync().Wait();
+            // This line is for while server running in container 
+            //_hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:9898/listenkeyboard").Build();
 
-        // Simply it's a event subscription to listen server
-        hubConnection.On("ListenKeyboard", ListenKeyboard());
+            // This line is for while server running in Visual Studio
+            //_hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000/listenkeyboard").Build();
+
+            // Start the connection
+            _hubConnection.StartAsync().Wait();
+
+            // Simply it's a event subscription to listen server
+            _hubConnection.On("ListenKeyboard", ListenKeyboard());
+        }
+        catch (NullReferenceException e)
+        {
+            Console.WriteLine($"HubConnection is failed {e.Message}");
+            throw e;
+        }
     }
 
     private Action<string, string> ListenKeyboard()
