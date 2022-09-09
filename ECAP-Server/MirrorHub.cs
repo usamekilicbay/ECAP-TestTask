@@ -14,6 +14,7 @@ internal class MirrorHub : Hub
             return;
         }
 
+        Console.Write(message);
         await Clients.All.SendAsync("ListenKeyboard", username, message);
     }
 }
