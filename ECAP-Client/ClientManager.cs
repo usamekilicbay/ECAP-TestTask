@@ -1,23 +1,20 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace ECAP_Client;
 internal class ClientManager
 {
     private readonly HubConnection _hubConnection = null!;
 
-    public ClientManager()
+    public ClientManager(IConfiguration configuration)
     {
-        // Start the connection by using the server Url, I could use Env variables to do it more flexible.
         try
         {
-            //This line is for both server and client running in containers
-            _hubConnection = new HubConnectionBuilder().WithUrl("http://host.docker.internal:9898/listenkeyboard").Build();
+            var serverSettings = new ServerSettings(configuration["SERVER_IP"], configuration["SERVER_PORT"]);
 
-            // This line is for while server running in container 
-            //_hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:9898/listenkeyboard").Build();
-
-            // This line is for while server running in Visual Studio
-            //_hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000/listenkeyboard").Build();
+            // Set the connection by using the server settings. Port part is for debugging, it has to be empty if you want to use docker compose
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl($"http://{serverSettings.Ip}:{serverSettings.Port}/listenkeyboard").Build();
 
             // Start the connection
             _hubConnection.StartAsync().Wait();
