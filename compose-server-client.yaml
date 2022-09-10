@@ -1,0 +1,17 @@
+version: "3"
+services:
+  ecap-server-container:
+    image: usamekilicbay/ecap-server:ecap-server
+    ports:
+      - 8080:80
+    stdin_open: true
+    tty: true
+  ecap-client-container:
+    image: usamekilicbay/ecap-client:ecap-client
+    ports:
+      - 8081:80
+    environment:
+      - SERVER_IP=ecap-server-container
+      - SERVER_PORT=
+    stdin_open: true
+    tty: true
