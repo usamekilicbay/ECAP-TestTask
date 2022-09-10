@@ -14,10 +14,13 @@ internal class ClientManager
 
             // Set the connection by using the server settings. Port part is for debugging, it has to be empty if you want to use docker compose
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl($"http://{serverSettings.Ip}:{serverSettings.Port}/listenkeyboard").Build();
+                .WithUrl($"http://{serverSettings.Ip}:{serverSettings.Port}/listenkeyboard")
+                // Reconnect if connection lost (2-2-10-30 seconds) after 4 try connection will be closed
+                .WithAutomaticReconnect()
+                .Build();
 
-            // Start the connection
-            _hubConnection.StartAsync().Wait();
+            // Start connection until it connects succesfully
+            StartConnection();
 
             // Simply it's a event subscription to listen server
             _hubConnection.On("ListenKeyboard", ListenKeyboard());
@@ -26,6 +29,24 @@ internal class ClientManager
         {
             Console.WriteLine($"HubConnection is failed {e.Message}");
             throw e;
+        }
+    }
+
+    private void StartConnection()
+    {
+        // Break recursion if hub is connected
+        if (_hubConnection.State == HubConnectionState.Connected)
+            return;
+
+        try
+        {
+            // Start the hub connection
+            _hubConnection.StartAsync().Wait();
+        }
+        catch (Exception)
+        {
+            // If the hub connection throws error call method as recursive
+            StartConnection();
         }
     }
 
@@ -69,7 +90,14 @@ internal class ClientManager
 
     private async Task SendMessageToServer(string message)
     {
-        // And lastly, call the SendMessageAsync method from Server (Username is not necessary)
-        await _hubConnection.InvokeCoreAsync("SendMessageAsync", args: new[] { "UnemployedOne", message });
+        try
+        {
+            // And lastly, call the SendMessageAsync method from Server (Username is not necessary)
+            await _hubConnection.InvokeCoreAsync("SendMessageAsync", args: new[] { "UnemployedOne", message });
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Server is dead! I can't let you type anything until server revives");
+        }
     }
 }
