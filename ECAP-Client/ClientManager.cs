@@ -10,6 +10,7 @@ internal class ClientManager
     {
         try
         {
+            // Create ServerSettings class to hold env variables
             var serverSettings = new ServerSettings(configuration["SERVER_IP"], configuration["SERVER_PORT"]);
 
             // Set the connection by using the server settings. Port part is for debugging, it has to be empty if you want to use docker compose
