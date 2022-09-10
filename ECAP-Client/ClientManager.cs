@@ -65,12 +65,22 @@ internal class ClientManager
     {
         Console.WriteLine("Please write the message you want to echo:");
 
+        DateTime lastPressTime = DateTime.Now;
+
         // Create infinite loop to not kill the application
         do
         {
+            DateTime currentPressTime;
+
             // These conditions for running app in Docker container, otherwise if might throw "InvalidOperationException application does not have a console" error
             if (!Console.IsInputRedirected && Console.KeyAvailable)
             {
+                currentPressTime = DateTime.Now;
+                // If last pressed time is smaller than given amount of time, continue typing in the same line
+                // If it's not, then set typed as false
+                var typed = CheckTimeDifference(lastPressTime, currentPressTime);
+                lastPressTime = currentPressTime;
+
                 // Read button instead of the char to check is it Enter 
                 // !!! Here we could use many different approaches but it works well for now
                 // true parameter is for not writing the actual input, all the chars user sees on the console is written by server
@@ -79,6 +89,10 @@ internal class ClientManager
                 // Kill the application when use presses Enter
                 if (pressedKey.Key == ConsoleKey.Enter)
                     Environment.Exit(0);
+
+                // if typed is false move cursor to next line
+                if (!typed)
+                    Console.WriteLine();
 
                 // Get the input char
                 var message = pressedKey.KeyChar.ToString();
@@ -100,5 +114,10 @@ internal class ClientManager
         {
             Console.WriteLine("Server is dead! I can't let you type anything until server revives");
         }
+    }
+
+    private static bool CheckTimeDifference(DateTime lastPressTime, DateTime currentPressTime)
+    {
+        return (currentPressTime - lastPressTime).TotalMilliseconds < 700;
     }
 }
